@@ -1,7 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { MovieService } from '../movie-service/movie-service.service';
 import { CreateMovieDto } from '../dto/create-movie-dto';
-import { Movie } from '../schemas/movie';
 
 @Controller('movies')
 export class MoviesController {
@@ -13,17 +12,24 @@ export class MoviesController {
   }
 
   @Get()
-  async findAll(): Promise<Movie[]> {
+  async findAll() {
     return this.movieService.findAll();
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Movie> {
-    return this.movieService.findOne(id);
+  @Put(':id')
+  async update(@Param('id') id: string,@Body() updateMovieBody: CreateMovieDto){
+    return this.movieService.update(id,updateMovieBody);
   }
 
   @Delete(':id')
   async delete(@Param('id') id: string) {
     return this.movieService.delete(id);
+  }
+
+  @Get('/search/:searchParam')
+  async search(@Param('searchParam') searchParam:string){
+    console.log("param ",searchParam);
+    
+    return this.movieService.search(searchParam);
   }
 }
